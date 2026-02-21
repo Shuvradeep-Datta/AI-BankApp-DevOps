@@ -18,6 +18,16 @@ services:
     networks:
       - bankapp-net
 
+  ollama:
+    image: ollama/ollama
+    container_name: bankapp-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - bankapp-net
+
   bankapp:
     build: .
     container_name: bankapp
@@ -29,6 +39,7 @@ services:
       MYSQL_DATABASE: bankappdb
       MYSQL_USER: root
       MYSQL_PASSWORD: Test@123
+      OLLAMA_URL: http://ollama:11434
     depends_on:
       mysql:
         condition: service_healthy
@@ -37,6 +48,7 @@ services:
 
 volumes:
   mysql-data:
+  ollama-data:
 
 networks:
   bankapp-net:
