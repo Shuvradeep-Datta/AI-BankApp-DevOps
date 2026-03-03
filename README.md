@@ -251,6 +251,33 @@ Configure the following Action Secrets within your GitHub repository settings:
 | `EC2_HOST` | The public IP address of the Application EC2 |
 | `EC2_USER` | The SSH username (default is `ubuntu`) |
 | `EC2_SSH_KEY` | The content of your private SSH key (`.pem` file) |
+| `NVD_API_KEY` | Free API key from [nvd.nist.gov](https://nvd.nist.gov/developers/request-an-api-key) for OWASP SCA scans |
+
+> **Note**: The `NVD_API_KEY` raises the NVD API rate limit from ~5 requests/30s to 50 requests/30s, reducing the OWASP Dependency Check scan time from 30+ minutes to under 8 minutes. Without it the SCA job will time out.
+
+##### Obtaining the NVD API Key
+
+**Step 1: Request the API Key**
+- Go to [https://nvd.nist.gov/developers/request-an-api-key](https://nvd.nist.gov/developers/request-an-api-key).
+- Enter your name, email address, and organization.
+- Click **Submit**.
+
+**Step 2: Activate the API Key**
+- Check your email inbox for a message from `nvd-noreply@nist.gov`.
+- Click the **activation link** in the email.
+- Enter `UUID` provided in email and Enter `Email` to activate
+- The link confirms your key and marks it as active.
+
+**Step 3: Get the API Key**
+- After clicking the activation link, the page will display your API key.
+- Copy and save it securely.
+
+**Step 4: Add as GitHub Secret**
+- Go to your repository on GitHub.
+- Navigate to **Settings** → **Secrets and variables** → **Actions** → **New repository secret**.
+- Name: `NVD_API_KEY`
+- Value: Paste the copied API key.
+- Click **Add Secret**.
 
 ![github-secret](screenshots/15.png)
 
