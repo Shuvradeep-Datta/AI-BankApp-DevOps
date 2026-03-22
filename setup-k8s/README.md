@@ -89,7 +89,9 @@ kubectl apply -f k8s/configmap.yml
 kubectl apply -f k8s/secrets.yml
 kubectl apply -f k8s/pv.yml
 kubectl apply -f k8s/pvc.yml
-kubectl apply -f k8s/deployment.yml
+kubectl apply -f k8s/mysql-deployment.yml
+kubectl apply -f k8s/ollama-deployment.yml
+kubectl apply -f k8s/bankapp-deployment.yml
 kubectl apply -f k8s/service.yml
 kubectl apply -f k8s/hpa.yml
 ```
