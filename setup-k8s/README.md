@@ -79,7 +79,48 @@ Wait for it to be ready:
 kubectl rollout status deployment/metrics-server -n kube-system --timeout=120s
 ```
 
-## 5. Apply manifests
+## 5. Install Kubernetes Dashboard
+
+Deploy the dashboard for visual cluster monitoring.
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+```
+
+Create an admin ServiceAccount so you can log in:
+
+```bash
+kubectl apply -f k8s/dashboard-admin.yml
+```
+
+Generate a bearer token for login:
+
+```bash
+kubectl -n kubernetes-dashboard create token dashboard-admin
+```
+
+Copy the token — you'll paste it into the dashboard login screen.
+
+Start the proxy to access the dashboard:
+
+```bash
+# local machine
+kubectl proxy
+
+# EC2 — bind to all interfaces so you can reach it remotely
+# (open port 8001 in your security group first)
+kubectl proxy --address='0.0.0.0' --accept-hosts='.*'
+```
+
+Open the dashboard at:
+
+```
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+```
+
+Select **Token**, paste the token from above, and sign in.
+
+## 6. Apply manifests
 
 Order matters — namespace and config first, then storage, then workloads.
 
@@ -96,7 +137,7 @@ kubectl apply -f k8s/service.yml
 kubectl apply -f k8s/hpa.yml
 ```
 
-## 6. Verify
+## 7. Verify
 
 ```bash
 kubectl get all -n bankapp
@@ -105,3 +146,25 @@ kubectl top pods -n bankapp
 ```
 
 App will be at **http://localhost:8080** once pods are ready.
+
+## 8. Test HPA (autoscaling)
+
+Generate CPU load on bankapp to trigger scale-up:
+
+```bash
+kubectl run load-test --image=busybox:1.36 -n bankapp -- sh -c "while true; do wget -q -O- http://bankapp-service:8080/actuator/health >/dev/null 2>&1; done"
+```
+
+Watch replicas scale from 2 → 4 (takes ~1-2 min for metrics to kick in):
+
+```bash
+kubectl get hpa -n bankapp -w
+```
+
+Clean up when done:
+
+```bash
+kubectl delete pod load-test -n bankapp
+```
+
+Scale-down happens automatically after 5 minutes of low CPU.
