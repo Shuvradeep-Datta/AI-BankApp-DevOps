@@ -81,44 +81,28 @@ kubectl rollout status deployment/metrics-server -n kube-system --timeout=120s
 
 ## 5. Install Kubernetes Dashboard
 
-Deploy the dashboard for visual cluster monitoring.
-
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
-```
-
-Create an admin ServiceAccount so you can log in:
-
-```bash
 kubectl apply -f k8s/dashboard-admin.yml
 ```
 
-Generate a bearer token for login:
+Generate a login token:
 
 ```bash
 kubectl -n kubernetes-dashboard create token dashboard-admin
 ```
 
-Copy the token — you'll paste it into the dashboard login screen.
-
-Start the proxy to access the dashboard:
+Start the proxy and open the dashboard:
 
 ```bash
-# local machine
 kubectl proxy
-
-# EC2 — bind to all interfaces so you can reach it remotely
-# (open port 8001 in your security group first)
-kubectl proxy --address='0.0.0.0' --accept-hosts='.*'
 ```
-
-Open the dashboard at:
 
 ```
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 ```
 
-Select **Token**, paste the token from above, and sign in.
+Select **Token**, paste the token, and sign in.
 
 ## 6. Apply manifests
 
