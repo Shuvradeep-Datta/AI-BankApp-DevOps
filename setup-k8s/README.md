@@ -12,7 +12,7 @@ brew install --cask docker
 
 # Ubuntu/Debian
 sudo apt-get update && sudo apt-get install -y docker.io
-sudo usermod -aG docker $USER   # log out & back in after this
+sudo usermod -aG docker $USER && newgrp docker  
 ```
 
 **kubectl** — CLI to talk to your cluster.
