@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+    name: nginx
+    namespace: bankapp
+spec:
+    containers:
+    - name: bankapp
+      image: trainwithshubham/bankapp:latest
+      ports:
+      - containerPort: 80
